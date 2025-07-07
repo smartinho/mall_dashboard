@@ -1,6 +1,8 @@
 // pages/index.js
 import { useState, useEffect } from 'react'
-import { parse } from 'csv-parse/browser/esm/sync'
+import fs from 'fs'
+import path from 'path'
+import { parse } from 'csv-parse/sync'
 import Sidebar from '../components/Sidebar'
 import UploadForm from '../components/UploadForm'
 import dynamic from 'next/dynamic'
@@ -9,34 +11,35 @@ import ShoppingMallBrandChart from '../components/ShoppingMallBrandChart'
 import BrandDisplayTypePie from '../components/BrandDisplayTypePie'
 import DisplayTypePriceScatter from '../components/DisplayTypePriceScatter'
 import ResolutionPriceBubble from '../components/ResolutionPriceBubble'
-import DisplayTypePriceBar from '../components/DisplayTypePriceBar'
+// import Test from '../components/Test'
+import DisplayTypePriceBar from '../components/DisplayTypePriceBar';
 import DataTable from '../components/DataTable'
 
+// Plotly chart loads client-side only
 const InchPriceBoxPlot = dynamic(
   () => import('../components/InchPriceBoxPlot'),
   { ssr: false, loading: () => <div>Loading chart…</div> }
 )
 
-export default function Home() {
+export default function Home({
+  initialData,
+  initialFileName,       // name of the CSV we loaded server-side
+}) {
   const [data, setData] = useState([])
   const [filterSelections, setFilterSelections] = useState({})
   const [filteredData, setFilteredData] = useState([])
 
+  // 1) On first load, initialize via handleData
   useEffect(() => {
-    fetch('/data/Product_Data_20250628.csv')  // 여기에 파일명 변경 가능
-      .then(res => res.text())
-      .then(csv => {
-        const records = parse(csv, {
-          columns: true,
-          skip_empty_lines: true,
-          trim: true,
-        })
-        handleData(records)
-      })
-  }, [])
+    if (initialData.length) {
+      handleData(initialData)
+    }
+  }, [initialData])
 
+  // central data+filter initializer — used both on SSR load and on upload
   const handleData = (jsonData) => {
     setData(jsonData)
+    // initialize every column’s filter set to “all”
     const init = {}
     if (jsonData.length) {
       Object.keys(jsonData[0]).forEach(col => {
@@ -46,6 +49,7 @@ export default function Home() {
     setFilterSelections(init)
   }
 
+  // when filters change, re-filter
   useEffect(() => {
     if (!data.length) {
       setFilteredData([])
@@ -60,6 +64,7 @@ export default function Home() {
     setFilteredData(tmp)
   }, [data, filterSelections])
 
+  // passed into Sidebar
   const handleFilter = (col, selectedValues) => {
     setFilterSelections(prev => ({
       ...prev,
@@ -75,7 +80,11 @@ export default function Home() {
       </header>
 
       <div className="main">
-        <UploadForm onData={handleData} />
+        {/* HERE: use handleData, not raw setData */}
+        <UploadForm
+          initialFileName={initialFileName}
+          onData={handleData}
+        />
 
         <div className="content">
           <Sidebar
@@ -120,6 +129,9 @@ export default function Home() {
           hight: 100%;
           padding: 20px;
           box-sizing: border-box;
+          // align-items: stretch;
+          // max-width: 1200px;
+          // margin: 0 auto;
         }
         @media (max-width: 900px) {
           .charts {
@@ -139,6 +151,49 @@ export default function Home() {
         .header .division { position: absolute; top: 0; left: 1rem; }
         .header h1 { margin: 0; font-size: 4rem; }
       `}</style>
+
     </div>
   )
+}
+
+export async function getServerSideProps() {
+  const dir = process.cwd()
+  const files = fs.readdirSync(dir).filter(f => /\.csv$/i.test(f))
+
+  // pick latest by YYMMDD or YYYYMMDD in name
+  const dated = files
+    .map(f => {
+      const m8 = f.match(/(\d{8})/)
+      const m6 = !m8 && f.match(/(\d{6})/)
+      return m8
+        ? { file: f, date: m8[1] }
+        : m6
+        ? { file: f, date: m6[1] }
+        : null
+    })
+    .filter(Boolean)
+    .sort((a, b) => b.date.localeCompare(a.date))
+
+  let initialData = []
+  let initialFileName = ''
+
+  if (dated.length) {
+    const latest = dated[0].file
+    initialFileName = latest
+    const raw = fs.readFileSync(path.join(dir, latest), 'utf8')
+    initialData = parse(raw, {
+      columns: true,
+      skip_empty_lines: true,
+      trim: true,
+      bom: true,
+      relax_column_count: true,
+    })
+  }
+
+  return {
+    props: {
+      initialData,
+      initialFileName,
+    },
+  }
 }
