@@ -108,9 +108,6 @@ export default function Home({
               <ChartCard title="Resolution vs Price">
                 <ResolutionPriceBubble data={filteredData} />
               </ChartCard>
-              {/* <ChartCard title="test">
-                <Test data={filteredData} />
-              </ChartCard> */}
               <ChartCard title="Display Type vs Brand">
                 <DisplayTypePriceBar data={filteredData} />
               </ChartCard>
