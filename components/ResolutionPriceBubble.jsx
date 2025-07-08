@@ -45,8 +45,7 @@ export default function ResolutionPriceBubble({
       count,
       avgPrice: priceSum / count,
     }));
-  }, [data]);
-  
+  }, [data]);  
 
   const totalCount = useMemo(
     () => summary.reduce((sum, e) => sum + e.count, 0),
