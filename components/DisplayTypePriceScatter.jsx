@@ -2,7 +2,6 @@
 import React, { useMemo } from 'react';
 import dynamic from 'next/dynamic';
 
-// Load Plotly only on client
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 
 export default function DisplayTypePriceScatter({ data, width = '100%', height = '100%' }) {
@@ -74,14 +73,12 @@ export default function DisplayTypePriceScatter({ data, width = '100%', height =
   };
 
   return (
-    <div style={{ width, height }}>
-      <Plot
-        data={traces}
-        layout={layout}
-        useResizeHandler
-        style={{ width: '95%', height: '100%' }}
-        config={{ displayModeBar: false }}
-      />
-    </div>
+    <Plot
+      data={traces}
+      layout={layout}
+      useResizeHandler
+      style={{ width, height}}
+      // config={{ displayModeBar: false }}
+    />
   );
 }

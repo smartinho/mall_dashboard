@@ -86,8 +86,8 @@ export default function ChartCard({ title, children }) {
         .aspect-ratio-box {
           position: relative;
           width: 100%;
-          padding-top: 75%;
-          overflow: auto;
+          padding-top: 30%;
+          overflow: hidden;
           border-radius: 6px;
         }
 
@@ -120,7 +120,6 @@ export default function ChartCard({ title, children }) {
           display: flex;
           flex-direction: column;
         }
-
         .modal-close {
           position: absolute;
           top: 8px;
@@ -134,6 +133,7 @@ export default function ChartCard({ title, children }) {
           flex: 1;
           width: 100%;
           height: 100%;
+          overflow: auto;
         }
       `}</style>
     </div>

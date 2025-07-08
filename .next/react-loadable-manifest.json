@@ -5,14 +5,20 @@
       "static/chunks/node_modules_react-plotly_js_react-plotly_js.js"
     ]
   },
-  "..\\components\\DisplayTypePriceBar.jsx -> react-plotly.js": {
-    "id": "..\\components\\DisplayTypePriceBar.jsx -> react-plotly.js",
+  "..\\components\\DisplayTypeBrandBar.jsx -> react-plotly.js": {
+    "id": "..\\components\\DisplayTypeBrandBar.jsx -> react-plotly.js",
     "files": [
       "static/chunks/node_modules_react-plotly_js_react-plotly_js.js"
     ]
   },
   "..\\components\\DisplayTypePriceScatter.jsx -> react-plotly.js": {
     "id": "..\\components\\DisplayTypePriceScatter.jsx -> react-plotly.js",
+    "files": [
+      "static/chunks/node_modules_react-plotly_js_react-plotly_js.js"
+    ]
+  },
+  "..\\components\\InchPriceBoxPlot.jsx -> react-plotly.js": {
+    "id": "..\\components\\InchPriceBoxPlot.jsx -> react-plotly.js",
     "files": [
       "static/chunks/node_modules_react-plotly_js_react-plotly_js.js"
     ]
@@ -27,12 +33,6 @@
     "id": "..\\components\\ShoppingMallBrandChart.jsx -> react-plotly.js",
     "files": [
       "static/chunks/node_modules_react-plotly_js_react-plotly_js.js"
-    ]
-  },
-  "index.js -> ../components/InchPriceBoxPlot": {
-    "id": "index.js -> ../components/InchPriceBoxPlot",
-    "files": [
-      "static/chunks/components_InchPriceBoxPlot_jsx.js"
     ]
   }
 }

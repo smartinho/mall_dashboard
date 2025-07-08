@@ -2,7 +2,6 @@
 import React, { useMemo } from 'react';
 import dynamic from 'next/dynamic';
 
-// Plotly is loaded client-side only
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 
 export default function ResolutionPriceBubble({
@@ -14,7 +13,13 @@ export default function ResolutionPriceBubble({
     return <div style={{ padding: 20, textAlign: 'center' }}>No data</div>;
   }
 
-  // 1) Aggregate by brand: count per resolution category and sum of prices
+  // 모든 해상도 카테고리 수집 (y축 고정용)
+  const allResCats = useMemo(() =>
+    Array.from(new Set(data.map(row => row.Resolution).filter(Boolean))),
+    [data]
+  );
+
+  // 브랜드별 해상도 카운트 및 평균 가격 계산
   const summary = useMemo(() => {
     const map = {};
     data.forEach((row) => {
@@ -25,41 +30,34 @@ export default function ResolutionPriceBubble({
         typeof priceRaw === 'string' ? priceRaw.replace(/[^0-9.]/g, '') : priceRaw
       );
       if (isNaN(price)) return;
-      if (!map[brand]) {
-        map[brand] = { catCounts: {}, priceSum: 0, count: 0 };
+  
+      const key = `${brand}__${resCat}`;
+      if (!map[key]) {
+        map[key] = { brand, resCat, priceSum: 0, count: 0 };
       }
-      map[brand].catCounts[resCat] = (map[brand].catCounts[resCat] || 0) + 1;
-      map[brand].priceSum += price;
-      map[brand].count += 1;
+      map[key].priceSum += price;
+      map[key].count += 1;
     });
-
-    return Object.entries(map).map(([brand, { catCounts, priceSum, count }]) => {
-      // Find most frequent resolution category for this brand
-      let topCat = null;
-      let maxCatCount = 0;
-      for (const [cat, cnt] of Object.entries(catCounts)) {
-        if (cnt > maxCatCount) {
-          maxCatCount = cnt;
-          topCat = cat;
-        }
-      }
-      const avgPrice = priceSum / count;
-      return { brand, resCat: topCat, count: maxCatCount, avgPrice };
-    });
+  
+    return Object.values(map).map(({ brand, resCat, priceSum, count }) => ({
+      brand,
+      resCat,
+      count,
+      avgPrice: priceSum / count,
+    }));
   }, [data]);
+  
 
-  // 2) Total count for sizing reference
   const totalCount = useMemo(
     () => summary.reduce((sum, e) => sum + e.count, 0),
     [summary]
   );
 
-  // 3) Build scatter traces: x=avgPrice, y=resolution category
   const traces = useMemo(
     () =>
       summary.map((e) => {
         const ratio = e.count / totalCount;
-        const size = Math.max(ratio * 100, 10); // size scaled [10..100]
+        const size = Math.max(ratio * 100, 10);
         return {
           x: [e.avgPrice],
           y: [e.resCat],
@@ -76,33 +74,28 @@ export default function ResolutionPriceBubble({
     [summary, totalCount]
   );
 
-  // 4) Layout with categorical y-axis
   const layout = {
     autosize: true,
-    margin: { l: 0, r: 0, t: 5, b: 10 },
+    margin: { l: 40, r: 20, t: 20, b: 40 },
     xaxis: { title: 'Price [$]', automargin: true },
-    yaxis: { title: 'Resolution', type: 'category', automargin: true },
-    showlegend: false,
-    legend: {
-      orientation: 'v',
-      x: 1.02,
-      y: 1,
-      xanchor: 'left',
-      bordercolor: '#ccc',
-      borderwidth: 1,
+    yaxis: {
+      title: 'Resolution',
+      type: 'category',
+      categoryorder: 'array',
+      categoryarray: allResCats,
+      automargin: true,
     },
+    showlegend: false,
     hovermode: 'closest',
   };
 
   return (
-    <div style={{ width, height }}>
-      <Plot
-        data={traces}
-        layout={layout}
-        useResizeHandler
-        style={{ width: '100%', height: '100%' }}
-        config={{ displayModeBar: false }}
-      />
-    </div>
+    <Plot
+      data={traces}
+      layout={layout}
+      useResizeHandler
+      style={{ width, height }}
+    />
   );
 }
+

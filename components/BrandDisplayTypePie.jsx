@@ -54,13 +54,12 @@ export default function BrandDisplayTypePie({
 
   if (isGrid) {
     const N = displayEntries.length;
-    const cols = Math.min(5, N);
-    // const cols = 10;
+    const cols = Math.min(10, N);
     const rows = Math.ceil(N / cols);
     const cw = 1 / cols;
     const ch = 1 / rows;
     const gapX = 0.02;
-    const gapY = 0.02;
+    const gapY = 0.05;
     const maxCount = Math.max(...displayEntries.map(e => e.count));
 
     displayEntries.forEach((e, idx) => {
@@ -103,7 +102,7 @@ export default function BrandDisplayTypePie({
   } else {
     const total = displayEntries.reduce((s, e) => s + e.count, 0);
     const n = displayEntries.length;
-    const gap = 0.02;
+    const gap = 0.05;
     const totalGap = gap * (n - 1);
     const effectiveWidth = 1 - totalGap;
 
@@ -150,14 +149,12 @@ export default function BrandDisplayTypePie({
   };
 
   return (
-    <div style={{ width, height }}>
-      <Plot
-        data={traces}
-        layout={layout}
-        useResizeHandler
-        style={{ width: '95%', height: '100%' }}
-        config={{ displayModeBar: false }}
-      />
-    </div>
+    <Plot
+      data={traces}
+      layout={layout}
+      useResizeHandler
+      style={{ width, height }}
+      // config={{ displayModeBar: false }}
+    />
   );
 }

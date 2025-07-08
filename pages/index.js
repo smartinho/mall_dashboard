@@ -3,19 +3,14 @@ import { useState, useEffect } from 'react'
 import { parse } from 'csv-parse/browser/esm/sync'
 import Sidebar from '../components/Sidebar'
 import UploadForm from '../components/UploadForm'
-import dynamic from 'next/dynamic'
 import ChartCard from '../components/ChartCard'
+import InchPriceBoxPlot from '../components/InchPriceBoxPlot'
 import ShoppingMallBrandChart from '../components/ShoppingMallBrandChart'
 import BrandDisplayTypePie from '../components/BrandDisplayTypePie'
 import DisplayTypePriceScatter from '../components/DisplayTypePriceScatter'
 import ResolutionPriceBubble from '../components/ResolutionPriceBubble'
-import DisplayTypePriceBar from '../components/DisplayTypePriceBar'
+import DisplayTypeBrandBar from '../components/DisplayTypeBrandBar'
 import DataTable from '../components/DataTable'
-
-const InchPriceBoxPlot = dynamic(
-  () => import('../components/InchPriceBoxPlot'),
-  { ssr: false, loading: () => <div>Loading chart…</div> }
-)
 
 export default function Home() {
   const [data, setData] = useState([])
@@ -100,7 +95,7 @@ export default function Home() {
                 <ResolutionPriceBubble data={filteredData} />
               </ChartCard>
               <ChartCard title="Display Type vs Brand">
-                <DisplayTypePriceBar data={filteredData} />
+                <DisplayTypeBrandBar data={filteredData} />
               </ChartCard>
             </div>
             <DataTable data={filteredData} />

@@ -2,7 +2,6 @@
 import React, { useMemo } from 'react';
 import dynamic from 'next/dynamic';
 
-// Plotly.js 클라이언트 전용 로드 (SSR 비활성화)
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 
 // HSL 기반 고유 색상 생성
@@ -71,8 +70,15 @@ export default function ShoppingMallBrandChart({
     () => ({
       barmode: 'stack',
       margin: { l: 0, r: 0, t: 0, b: 20 },
-      xaxis: { showgrid: true, zeroline: true, title: '' },
-      yaxis: { automargin: true, title: '' },
+      xaxis: { 
+        title: '',
+        showgrid: true, 
+        zeroline: true,  
+      },
+      yaxis: { 
+        title: '',
+        automargin: true, 
+      },
       showlegend: false,
       hovermode: 'closest',
     }),
@@ -80,14 +86,12 @@ export default function ShoppingMallBrandChart({
   );
 
   return (
-    <div style={{ width, height }}>
-      <Plot
-        data={traces}
-        layout={layout}
-        useResizeHandler
-        style={{ width: '100%', height: '100%' }}
-        config={{ displayModeBar: false }}
-      />
-    </div>
+    <Plot
+      data={traces}
+      layout={layout}
+      useResizeHandler
+      style={{ width, height}}
+      // config={{ displayModeBar: false }}
+    />
   );
 }

@@ -1,6 +1,8 @@
 // components/InchPriceBoxPlot.jsx
 import React, { useMemo } from 'react';
-import Plot from 'react-plotly.js';
+import dynamic from 'next/dynamic';
+
+const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 
 export default function InchPriceBoxPlot({
   data,
@@ -68,14 +70,12 @@ export default function InchPriceBoxPlot({
   };
 
   return (
-    <div style={{ width, height }}>
       <Plot
         data={traces}
         layout={layout}
         useResizeHandler
-        style={{ width: '95%', height: '100%' }}
-        config={{ displayModeBar: false }}
+        style={{ width, height}}
+        // config={{ displayModeBar: false }}
       />
-    </div>
   );
 }
