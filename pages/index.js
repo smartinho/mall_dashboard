@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { parse } from 'csv-parse/browser/esm/sync'
 import Sidebar from '../components/Sidebar'
 import UploadForm from '../components/UploadForm'
+import MainForm from '../components/MainForm'
 import ChartCard from '../components/ChartCard'
 import InchPriceBoxPlot from '../components/InchPriceBoxPlot'
 import ShoppingMallBrandChart from '../components/ShoppingMallBrandChart'
@@ -71,12 +72,10 @@ export default function Home() {
 
       <div className="main">
         <UploadForm onData={handleData} />
-
+        <MainForm data={data} onFilter={handleFilter} />        
+      </div>
         <div className="content">
-          <Sidebar
-            data={data}
-            onFilter={handleFilter}
-          />
+          <Sidebar data={data} onFilter={handleFilter} />
           <div className="dashboard">
             <div className="charts">
               <ChartCard title="Shopping Mall vs Brand">
@@ -100,11 +99,20 @@ export default function Home() {
             </div>
             <DataTable data={filteredData} />
           </div>
-        </div>
+        
       </div>
 
       <style jsx>{`
-        .main { padding: 1rem; }
+        .main { 
+          padding: 1rem;
+          display: flex;
+          flex-direction: row;
+          align-items: flex-start;
+          justify-content: flex-start;
+          gap: 16px;
+          flex-wrap: nowrap;
+          overflow-x: hidden;
+        }
         .content { display: flex; flex: 1; overflow: hidden; }
         .dashboard { flex: 1; padding: 1rem; overflow: auto; }
         .charts {
@@ -127,12 +135,43 @@ export default function Home() {
           }
         }        
         .header {
-          position: relative; height: 80px;
-          display: flex; align-items: center; justify-content: center;
-          background: #0c011b; color: #fff; padding: 1rem;
+          position: relative; 
+          height: 80px;
+          display: flex; 
+          align-items: center; 
+          justify-content: center;
+          background: #0c011b; 
+          color: #fff; 
+          padding: 1rem;
         }
-        .header .division { position: absolute; top: 0; left: 1rem; }
+        .header .division { 
+          position: absolute; 
+          top: 0; 
+          left: 1rem; 
+        }
         .header h1 { margin: 0; font-size: 4rem; }
+
+        @media (max-width: 768px) {
+          .header h1 {
+            font-size: 3rem;
+            text-align: center;
+          }
+        
+          .header .division {
+            // position: absolute; 
+            font-size: 1rem;
+            // top: 0;
+            // left: 1rem;
+            transform: translateX(-50%);
+          }
+        
+          .header {
+            flex-direction: column;
+            height: auto;
+            padding: 2rem 0.5rem;
+          }
+        }    
+
       `}</style>
     </div>
   )

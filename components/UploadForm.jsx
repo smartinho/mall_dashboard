@@ -5,21 +5,20 @@ import Papa from 'papaparse'
 export default function UploadForm({ onData, initialFileName = '' }) {
   const fileInputRef = useRef()
   const [fileName, setFileName] = useState(initialFileName)
+  const [uploadedData, setUploadedData] = useState([])
 
   useEffect(() => {
-    console.debug('UploadForm mounted; initialFileName:', initialFileName)
     setFileName(initialFileName)
   }, [initialFileName])
-
+  
   const handleUpload = () => {
     const file = fileInputRef.current.files[0]
-    console.debug('File input files:', fileInputRef.current.files)
     if (!file) return
-    console.debug('Uploading file:', file.name)
-    setFileName(file.name)
 
+    setFileName(file.name)
     const ext = file.name.split('.').pop().toLowerCase()
     const reader = new FileReader()
+
     reader.onload = evt => {
       if (ext === 'csv') {
         const text = evt.target.result
@@ -29,6 +28,7 @@ export default function UploadForm({ onData, initialFileName = '' }) {
           transformHeader: h => h.trim(),
           transform: v => (typeof v === 'string' ? v.trim() : v),
         })
+        setUploadedData(data)
         onData(data)
       } else {
         const array = new Uint8Array(evt.target.result)
@@ -36,13 +36,14 @@ export default function UploadForm({ onData, initialFileName = '' }) {
         const firstSheet = workbook.SheetNames[0]
         const worksheet = workbook.Sheets[firstSheet]
         const jsonData = XLSX.utils.sheet_to_json(worksheet, { defval: '' })
+        setUploadedData(jsonData)
         onData(jsonData)
       }
     }
     if (ext === 'csv') reader.readAsText(file, 'utf8')
     else reader.readAsArrayBuffer(file)
   }
-
+  
   return (
     <div className="upload-form">
       <input
@@ -62,10 +63,12 @@ export default function UploadForm({ onData, initialFileName = '' }) {
       <style jsx>{`
         .upload-form {
           padding: 0.3rem;
+          width: 100%;
           background: #fafafa;
           border-bottom: 1px solid #ddd;
           display: flex;
           align-items: center;
+          white-space: nowrap;
         }
         .upload-button {
           display: inline-flex;
