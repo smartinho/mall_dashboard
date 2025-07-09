@@ -24,18 +24,26 @@ export default function MainFilter({ data = [], onFilter }) {
 
         <style jsx>{`
             .main-filter {
-            display: inline-flex;
-            gap: 12px;
-            padding: 0;
+                display: flex;
+                gap: 12px;
+                align-items: center;
+                height: 2.5rem;     
             }
             .main-filter-item {
-            flex: 1;
+                min-width: 140px;
+                max-width: 140px;                
             }
             .main-filter-item :global(button) {
-            width: 100% !important;
-            box-sizing: border-box;
-            display: inline-flex;
-            justify-content: center;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                height: 2.5rem;
+                padding: 0 1rem;
+                font-size: 1rem;
+                border-radius: 20px;
+                border: none;
+                background: #228be6;
+                color: white;
             }
         `}</style>
         </div>

@@ -62,25 +62,24 @@ export default function UploadForm({ onData, initialFileName = '' }) {
 
       <style jsx>{`
         .upload-form {
-          padding: 0.3rem;
-          width: 100%;
-          background: #fafafa;
-          border-bottom: 1px solid #ddd;
           display: flex;
           align-items: center;
+          gap: 12px;
           white-space: nowrap;
+          height: 2.5rem;
         }
         .upload-button {
           display: inline-flex;
           align-items: center;
+          justify-content: center;
+          height: 2.5rem;
+          padding: 0 1rem;
+          font-size: 1rem;
           background: rgb(0, 61, 107);
           border: none;
           color: #fff;
-          margin-left: 10px;
-          padding: 0.5rem 1rem;
-          border-radius: 50px;
+          border-radius: 20px;
           cursor: pointer;
-          font-size: 1rem;
         }
         .upload-button .icon {
           margin-right: 0.5rem;

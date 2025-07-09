@@ -1,66 +1,57 @@
-import { useState } from 'react';
 import FilterPanel from './FilterPanel';
 
-export default function Sidebar({ data = [], onFilter }) {
-  const [isOpen, setIsOpen] = useState(false);
+export default function Sidebar({ data = [], onFilter, isOpen, onClose }) {
+  if (!isOpen) return null;
 
   return (
-    <>
-      <button
-        className="toggle-button"
-        onClick={() => setIsOpen(!isOpen)}
-        aria-label="Toggle Filters"
-      >
-        ☰
-      </button>
-
-      <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
-        <FilterPanel data={data} onFilter={onFilter} />
-      </aside>
+    <div className="sidebar-wrapper">
+      <div className="sidebar">
+        <button
+          className="close-button"
+          onClick={onClose}
+          aria-label="Close Sidebar"
+        >
+          ✕
+        </button>
+        <div className="filter-container">
+          <FilterPanel data={data} onFilter={onFilter} />
+        </div>
+      </div>
 
       <style jsx>{`
-        .toggle-button {
-          display: none;
-          background: none;
-          border: none;
-          font-size: 1.5rem;
-          cursor: pointer;
+        .sidebar-wrapper {
+          display: inline-block;
         }
 
         .sidebar {
-          flex: 0 0 150px;
-          padding: 1rem;
           background: #f5f5f5;
-          border-right: 1px solid #ddd;
-          overflow-y: auto;
+          border: 1px solid #ddd;
+          padding: 2.5rem 1rem 1rem 1rem; /* 상단 패딩 추가로 닫기 버튼 공간 확보 */
+          border-radius: 8px;
+          box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+          position: relative;
+          z-index: 100;
+          min-width: 180px;
         }
 
-        @media (max-width: 768px) {
-          .toggle-button {
-            display: block;
-            position: fixed;
-            color: white;
-            top: 5rem;
-            left: 1rem;
-            z-index: 1100;
-          }
+        .close-button {
+          position: absolute;
+          top: 8px;
+          right: 8px;
+          background: #0c011b;
+          color: white;
+          border: none;
+          font-size: 1rem;
+          padding: 0.4rem 0.8rem;
+          border-radius: 50%;
+          cursor: pointer;
+          z-index: 101;
+        }
 
-          .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
-            width: 240px;
-            transform: translateX(-100%);
-            transition: transform 0.3s ease;
-            z-index: 1000;
-          }
-
-          .sidebar.open {
-            transform: translateX(0);
-          }
+        .filter-container {
+          margin-top: 0.5rem;
         }
       `}</style>
-    </>
+    </div>
   );
 }
