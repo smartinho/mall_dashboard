@@ -86,7 +86,7 @@ export default function ChartCard({ title, children }) {
         .aspect-ratio-box {
           position: relative;
           width: 100%;
-          padding-top: 30%;
+          padding-top: 50%;
           overflow: hidden;
           border-radius: 6px;
         }

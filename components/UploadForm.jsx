@@ -66,13 +66,14 @@ export default function UploadForm({ onData, initialFileName = '' }) {
           align-items: center;
           gap: 12px;
           white-space: nowrap;
-          height: 2.5rem;
+          height: 2rem;
+          width: 140px;
         }
         .upload-button {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          height: 2.5rem;
+          height: 2rem;
           padding: 0 1rem;
           font-size: 1rem;
           background: rgb(0, 61, 107);

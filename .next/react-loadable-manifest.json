@@ -34,5 +34,11 @@
     "files": [
       "static/chunks/node_modules_react-plotly_js_react-plotly_js.js"
     ]
+  },
+  "..\\components\\Timechart.jsx -> react-plotly.js": {
+    "id": "..\\components\\Timechart.jsx -> react-plotly.js",
+    "files": [
+      "static/chunks/node_modules_react-plotly_js_react-plotly_js.js"
+    ]
   }
 }

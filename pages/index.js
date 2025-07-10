@@ -5,6 +5,7 @@ import Sidebar from '../components/Sidebar'
 import UploadForm from '../components/UploadForm'
 import MainFilter  from '../components/MainFilter'
 import ChartCard from '../components/ChartCard'
+import Timechart from '../components/Timechart'
 import InchPriceBoxPlot from '../components/InchPriceBoxPlot'
 import ShoppingMallBrandChart from '../components/ShoppingMallBrandChart'
 import BrandDisplayTypePie from '../components/BrandDisplayTypePie'
@@ -97,6 +98,9 @@ export default function Home() {
           />
           <div className="dashboard">
             <div className="charts">
+              <ChartCard title="Time Chart(Brand & Model)">
+                <Timechart data={filteredData} />
+              </ChartCard>
               <ChartCard title="Shopping Mall vs Brand">
                 <ShoppingMallBrandChart data={filteredData} />
               </ChartCard>
@@ -133,12 +137,14 @@ export default function Home() {
           // width: 100%;
         }
         .sidebar-toggle {
-          background: #0c011b;
-          color: white;
+          background: #f5f5f5;;
+          color: black;
           border: none;
           font-size: 1rem;
           padding: 0.5rem 1rem;
           border-radius: 10px;
+          border-radius: 8px;
+          box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
           cursor: pointer;
         }
         @media (max-width: 768px) {

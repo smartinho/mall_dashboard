@@ -123,8 +123,21 @@ export default function Filter({ col, data = [], onChange }) {
       )}
 
       <style jsx>{`
-        .filter-wrapper { position: relative; z-index: 1000; margin-bottom: 8px; }
-        .filter-button { width: 100%; padding: 6px 12px; background: #3182ce; color: #fff; border: none; border-radius: 50px; cursor: pointer; text-align: left; white-space: nowrap; }
+        .filter-wrapper { 
+          position: relative; 
+          z-index: 1000; 
+        }
+        .filter-button { 
+          width: 100%; 
+          padding: 6px 12px; 
+          background: #3182ce; 
+          color: #fff; 
+          border: none; 
+          border-radius: 50px; 
+          cursor: pointer; 
+          text-align: left; 
+          white-space: nowrap; 
+        }
         .filter-button.active { background: #38a169; }
         .filter-dropdown { position: absolute; top: calc(100% + 4px); left: 0; background: #fff; border: 1px solid #cbd5e0; border-radius: 8px; padding: 8px; max-height: 240px; overflow-y: auto; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); z-index: 1000; }
         .filter-search { width: calc(100% - 16px); padding: 4px 8px; margin-bottom: 8px; border: 1px solid #cbd5e0; border-radius: 4px; }

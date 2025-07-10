@@ -11,7 +11,7 @@ export default function Sidebar({ data = [], onFilter, isOpen, onClose }) {
           onClick={onClose}
           aria-label="Close Sidebar"
         >
-          ✕
+          ◀
         </button>
         <div className="filter-container">
           <FilterPanel data={data} onFilter={onFilter} />
@@ -38,8 +38,8 @@ export default function Sidebar({ data = [], onFilter, isOpen, onClose }) {
           position: absolute;
           top: 8px;
           right: 8px;
-          background: #0c011b;
-          color: white;
+          // background: #0c011b;
+          color: black;
           border: none;
           font-size: 1rem;
           padding: 0.4rem 0.8rem;

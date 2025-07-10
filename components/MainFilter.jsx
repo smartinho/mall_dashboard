@@ -27,17 +27,17 @@ export default function MainFilter({ data = [], onFilter }) {
                 display: flex;
                 gap: 12px;
                 align-items: center;
-                height: 2.5rem;     
+                height: 2rem;     
             }
             .main-filter-item {
                 min-width: 140px;
                 max-width: 140px;                
             }
             .main-filter-item :global(button) {
-                display: inline-flex;
+                display: flex;
                 align-items: center;
                 justify-content: center;
-                height: 2.5rem;
+                height: 2rem;
                 padding: 0 1rem;
                 font-size: 1rem;
                 border-radius: 20px;
