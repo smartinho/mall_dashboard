@@ -144,7 +144,7 @@ export default function BrandDisplayTypePie({
 
   const layout = {
     autosize: true,
-    margin: { l: 20, r: 20, t: 20, b: isGrid ? 20 : 80 },
+    margin: { l: 0, r: 20, t: 0, b: isGrid ? 20 : 80 },
     annotations,
   };
 

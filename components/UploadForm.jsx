@@ -73,9 +73,9 @@ export default function UploadForm({ onData, initialFileName = '' }) {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          height: 2rem;
+          height: 25px;
           padding: 0 1rem;
-          font-size: 1rem;
+          font-size: 14px;
           background: rgb(0, 61, 107);
           border: none;
           color: #fff;
@@ -83,8 +83,8 @@ export default function UploadForm({ onData, initialFileName = '' }) {
           cursor: pointer;
         }
         .upload-button .icon {
-          margin-right: 0.5rem;
-          font-size: 1.2rem;
+          margin-right: 12px;
+          font-size: 14px;
           line-height: 1;
         }
         .file-name {

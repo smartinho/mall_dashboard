@@ -49,7 +49,7 @@ export default function DisplayTypePriceScatter({ data, width = '100%', height =
   // 5) Layout
   const layout = {
     autosize: true,
-    margin: { l: 10, r: 10, t: 5, b: 10 },
+    margin: { l: 0, r: 0, t: 0, b: 20 },
     xaxis: {
       title: priceKey,
       automargin: true,

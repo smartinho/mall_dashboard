@@ -75,7 +75,7 @@ export default function ResolutionPriceBubble({
 
   const layout = {
     autosize: true,
-    margin: { l: 40, r: 20, t: 20, b: 40 },
+    margin: { l: 0, r: 0, t: 0, b: 20 },
     xaxis: { title: 'Price [$]', automargin: true },
     yaxis: {
       title: 'Resolution',
