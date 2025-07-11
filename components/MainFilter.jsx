@@ -25,15 +25,15 @@ export default function MainFilter({ data = [], onFilter }) {
           height: 25px;     
         }
         .main-filter-item {
-          min-width: 120px;
-          max-width: 120px;                
+          min-width: 100px;
+          max-width: 100px;                
         }
         .main-filter-item :global(button) {
           display: flex;
           align-items: center;
           justify-content: center;
           height: 25px;
-          padding: 0 1rem;
+          // padding: 0 1rem;
           font-size: 14px;
           border-radius: 20px;
           border: none;

@@ -69,22 +69,20 @@ export default function Home() {
     <div>
       <header className="header">
         <h2 className="division">MS모듈구매담당</h2>
-        <div className="main">
-          <div className="center-container">
-            <button
+          <button
               className="sidebar-toggle"
               onClick={() => setSidebarOpen(true)}
               aria-label="Open Sidebar"
               title="Full Filter"
             >
               ☰
-            </button>
-            <div className="upload-filter-wrapper">
-              <UploadForm onData={handleData} />
+          </button>
+          <div className="main-filter">
               <MainFilter data={data} onFilter={handleFilter} />
-            </div>
           </div>
-        </div>
+          <div className="upload-filter">
+            <UploadForm onData={handleData} />
+          </div>
       </header>
       <div className="content">
         <Sidebar
@@ -138,41 +136,42 @@ export default function Home() {
           left: 1rem;
           font-size: 1rem;
         }
-        .main {
-          display: flex;
-          padding: 0;
-        }
-        .center-container {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-        }
         .sidebar-toggle {
+          position: absolute;
+          top: 40px;
+          left: 1rem;
           background: #0c011b;
           color: white;
           border: none;
           font-size: 1.2rem;
-          padding: 0;
           border-radius: 10px;
           cursor: pointer;
         }
-        @media (max-width: 768px) {
-          .sidebar-toggle { position: relative; z-index: 1200; }
-        }
-        .upload-filter-wrapper {
+        .main-filter {
           display: flex;
-          gap: 12px;
+          position: absolute;
+          top: 45px;
           align-items: center;
           margin: 0 auto;
         }
         @media (max-width: 767px) {
-          .upload-filter-wrapper { display: none; }
+          .main-filter { display: none; }
+        }
+        .upload-filter {
+          position: absolute;
+          top: 40px;
+          right: 1rem;
+          align-items: center;
+          margin: 0 auto;
+        }
+        @media (max-width: 767px) {
+          .upload-filter { display: none; }
         }
         .content { display: flex; flex: 1; overflow: hidden; }
         .dashboard { flex: 1; padding: 1rem; overflow: auto; }
         .charts {
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
+          grid-template-columns: repeat(2, 1fr);
           gap: 20px;
           width: 100%;
           padding: 20px;
