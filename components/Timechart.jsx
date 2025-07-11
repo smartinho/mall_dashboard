@@ -13,8 +13,8 @@ export default function Timechart({ data = [] }) {
     if (data && data.length > 0) return;
     async function loadCsvFiles() {
       const months = [
-        '1월','2월','3월','4월','5월','6월',
-        '7월','8월','9월','10월','11월','12월'
+        'Jan','Feb','Mar','Apr','May','Jun',
+        'Jul','Aug','Sep','Oct','Nov','Dec'
       ];
       const promises = months.map(month =>
         fetch(`/data/Product_Data_${month}.csv`)

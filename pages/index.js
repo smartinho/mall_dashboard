@@ -1,6 +1,7 @@
 // pages/index.js
 import { useState, useEffect } from 'react';
 import { parse } from 'csv-parse/browser/esm/sync';
+
 import Sidebar from '../components/Sidebar';
 import UploadForm from '../components/UploadForm';
 import MainFilter from '../components/MainFilter';
@@ -20,6 +21,14 @@ export default function Home() {
   const [filteredData, setFilteredData] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  // ✅ summary_table.csv 자동 생성 API 호출
+  useEffect(() => {
+    fetch('/api/generate-summary')
+      .then(res => res.json())
+      .then(data => console.log(data.message));
+  }, []);
+
+  // ✅ 기본 데이터 로딩
   useEffect(() => {
     fetch('/data/Product_Data_20250628.csv')
       .then(res => res.text())

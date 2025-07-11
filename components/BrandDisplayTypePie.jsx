@@ -128,14 +128,14 @@ export default function BrandDisplayTypePie({
       annotations.push({
         text: `${e.brand} (${e.count})`,
         x: x0 + w / 2,
-        y: -0.15,
+        y: -0.10,
         xref: 'paper',
         yref: 'paper',
         xanchor: 'center',
         yanchor: 'top',
         showarrow: false,
         font: { size: 12, color: '#000' },
-        textangle: 15,
+        textangle: 0,
       });
 
       x0 = x1 + gap;
