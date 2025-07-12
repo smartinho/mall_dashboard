@@ -2,8 +2,14 @@
 import React from 'react';
 import Filter from './Filter';
 
-export default function MainFilter({ data = [], onFilter }) {
-  const cols = ['Brand', 'Screen Size', 'Display Type', 'Resolution'];
+export default function MainFilter({ data = [], onFilter, filterSelections = {} }) {
+  const cols = [
+    'Brand', 
+    'Screen Size', 
+    'Display Type', 
+    'Resolution',
+    'Platform',
+  ];
 
   return (
     <div className="main-filter">
@@ -12,6 +18,7 @@ export default function MainFilter({ data = [], onFilter }) {
           <Filter
             col={col}
             data={data}
+            selectedValues={Array.from(filterSelections[col] || [])}
             onChange={vals => onFilter(col, vals)}
           />
         </div>
@@ -22,18 +29,17 @@ export default function MainFilter({ data = [], onFilter }) {
           display: flex;
           gap: 12px;
           align-items: center;
-          height: 25px;     
+          height: 25px;
         }
         .main-filter-item {
           min-width: 100px;
-          max-width: 100px;                
+          max-width: 100px;
         }
         .main-filter-item :global(button) {
           display: flex;
           align-items: center;
           justify-content: center;
           height: 25px;
-          // padding: 0 1rem;
           font-size: 14px;
           border-radius: 20px;
           border: none;

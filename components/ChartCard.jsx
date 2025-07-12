@@ -1,8 +1,13 @@
-// components/ChartCard.jsx
 import { useState, cloneElement } from 'react';
 import { ZoomIn } from 'lucide-react';
 
-export default function ChartCard({ title, children }) {
+export default function ChartCard({
+  title,
+  children,
+  fullHeight = false,
+  onTitleClick = null,
+  subtitle = null
+}) {
   const [isOpen, setIsOpen] = useState(false);
 
   const renderModalChild = () =>
@@ -14,7 +19,17 @@ export default function ChartCard({ title, children }) {
   return (
     <div className="chart-card">
       <div className="chart-header">
-        <h4 className="chart-title">{title}</h4>
+        <h4
+          className={`chart-title${onTitleClick ? ' clickable' : ''}`}
+          onClick={() => onTitleClick && onTitleClick()}
+        >
+          {title}
+        </h4>
+        {subtitle && (
+          <div className="chart-subtitle">
+            {subtitle}
+          </div>
+        )}
         <button
           onClick={() => setIsOpen(true)}
           aria-label="Zoom Chart"
@@ -24,9 +39,13 @@ export default function ChartCard({ title, children }) {
         </button>
       </div>
 
-      <div className="aspect-ratio-box">
-        <div className="chart-container">{children}</div>
-      </div>
+      {fullHeight ? (
+        <div className="full-container">{children}</div>
+      ) : (
+        <div className="aspect-ratio-box">
+          <div className="chart-container">{children}</div>
+        </div>
+      )}
 
       {isOpen && (
         <div className="modal-overlay" onClick={() => setIsOpen(false)}>
@@ -55,18 +74,31 @@ export default function ChartCard({ title, children }) {
         }
         .chart-header {
           display: flex;
-          justify-content: space-between;
           align-items: center;
+          gap: 10px;
         }
-        .chart-title { margin: 0; }
+        .chart-title {
+          margin: 0;
+          font-size: 1.1rem;
+          flex-shrink: 0;
+        }
+        .chart-title.clickable {
+          cursor: pointer;
+        }
+        .chart-title.clickable:hover {
+          text-decoration: underline;
+        }
+        .chart-subtitle {
+          color: #006400;
+          font-size: 0.9rem;
+          line-height: 1.2;
+        }
         .zoom-button {
+          margin-left: auto;
           background: none;
           border: none;
           cursor: pointer;
-          padding: 0;
-          color: #555;
         }
-        .zoom-button:hover { color: #000; }
         .aspect-ratio-box {
           position: relative;
           width: 100%;
@@ -80,8 +112,10 @@ export default function ChartCard({ title, children }) {
           width: 100%; height: 100%;
         }
         .modal-overlay {
-          position: fixed; inset: 0;
-          background: rgba(0, 0, 0, 0.5);
+          position: fixed;
+          top: 0; left: 0;
+          width: 100%; height: 100%;
+          background: rgba(0,0,0,0.5);
           display: flex;
           justify-content: center;
           align-items: center;
@@ -94,7 +128,7 @@ export default function ChartCard({ title, children }) {
           padding: 2rem;
           width: 80vw;
           height: 80vh;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
           display: flex;
           flex-direction: column;
         }
@@ -108,6 +142,15 @@ export default function ChartCard({ title, children }) {
         }
         .modal-chart {
           flex: 1; width: 100%; height: 100%; overflow: auto;
+        }
+        /* fullHeight 모드일 때 */
+        .full-container {
+          flex: 1;
+          display: flex;
+          overflow: hidden;
+        }
+        .full-container > * {
+          flex: 1;
         }
       `}</style>
     </div>

@@ -1,120 +1,111 @@
-// components/Timechart.jsx
 import React, { useEffect, useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import Papa from 'papaparse';
 
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 
-export default function Timechart({ data = [] }) {
+export default function Timechart({ data = [], selectedKey = null }) {
   const [csvData, setCsvData] = useState([]);
 
-  // 기존 CSV 로딩은 data prop이 비어있을 때만 실행
+  // ▶ CSV는 마운트 시 한 번만 로드합니다.
   useEffect(() => {
-    if (data && data.length > 0) return;
     async function loadCsvFiles() {
-      const months = [
-        'Jan','Feb','Mar','Apr','May','Jun',
-        'Jul','Aug','Sep','Oct','Nov','Dec'
-      ];
-      const promises = months.map(month =>
-        fetch(`/data/Product_Data_${month}.csv`)
-          .then(res => res.text())
-          .then(text => {
-            const parsed = Papa.parse(text, { header: true });
-            return { month, rows: parsed.data };
-          })
-          .catch(() => null)
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const results = await Promise.all(
+        months.map(month =>
+          fetch(`/data/Product_Data_${month}.csv`)
+            .then(res => res.text())
+            .then(text => ({ month, rows: Papa.parse(text, { header: true }).data }))
+        )
       );
-      const results = await Promise.all(promises);
-      setCsvData(results.filter(Boolean));
+      setCsvData(results);
     }
     loadCsvFiles();
-  }, [data]);
+  }, []);
 
-  // CSV 데이터로부터 월별 시계열 생성
+  // ▶ Brand__Model 에 매핑된 가격 시리즈 생성
   const baseSeries = useMemo(() => {
     const map = {};
     csvData.forEach(({ month, rows }) => {
       rows.forEach(row => {
         const brand = row['Brand'];
         const model = row['Model Name'];
-        const priceStr = row['Price[$]'];
-        if (!brand || !model || !priceStr) return;
-        const price = parseFloat(priceStr.replace(/[^0-9.]/g, ''));
-        if (isNaN(price)) return;
+        const price = parseFloat((row['Price[$]']||'').replace(/[^0-9.]/g, ''));
+        if (!brand || !model || isNaN(price)) return;
         const key = `${brand}__${model}`;
-        map[key] = map[key] || { brand, model, prices: {} };
+        if (!map[key]) map[key] = { brand, model, prices: {} };
         map[key].prices[month] = price;
       });
     });
     return Object.values(map);
   }, [csvData]);
 
-  // MainFilter로부터 전달된 data에서 남길 key 집합
-  const filterKeys = useMemo(() => {
-    return new Set(data.map(r => `${r['Brand']}__${r['Model Name']}`));
-  }, [data]);
-
-  // 필터링된 시리즈
+  // ▶ 필터링된 data 를 기준으로 표시할 시리즈 결정
+  const filterKeys = useMemo(
+    () => new Set(data.map(r => `${r['Brand']}__${r['Model Name']}`)),
+    [data]
+  );
   const timeSeries = useMemo(() => {
     if (!data.length) return baseSeries;
     return baseSeries.filter(ts => filterKeys.has(`${ts.brand}__${ts.model}`));
-  }, [baseSeries, filterKeys, data.length]);
+  }, [baseSeries, filterKeys, data]);
 
-  // Plotly trace 생성
+  // ▶ Plotly trace 생성
   const traces = useMemo(() => {
-    return timeSeries.map(({ brand, model, prices }) => {
-      const months = Object.keys(prices).sort((a, b) => {
-        const getMonthNum = m => parseInt(m.replace('월', ''), 10);
-        return getMonthNum(a) - getMonthNum(b);
-      });
-      return {
-        type: 'scatter',
-        mode: 'lines+markers',
-        name: `${brand} ${model}`,
-        x: months,
-        y: months.map(m => prices[m]),
-        hovertemplate: `<b>${brand} ${model}</b><br>%{x}: %{y}<extra></extra>`,
-      };
-    });
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return timeSeries.map(({ brand, model, prices }) => ({
+      x: months,
+      y: months.map(m => prices[m] ?? null),
+      name: `${brand} ${model}`,
+      type: 'scatter',
+      mode: 'lines+markers',
+      hovertemplate: `<b>${brand} ${model}</b><br>%{x}: %{y}<extra></extra>`
+    }));
   }, [timeSeries]);
 
-  // 레이아웃: legend를 하단 중앙에, 가로 배치, 3열 분할 분위기
-  const layout = {
+  // ▶ 선택된 시리즈만 보이게, text 레이블 추가
+  const displayTraces = useMemo(() => {
+    if (selectedKey) {
+      const target = selectedKey.replace('__', ' ');
+      return traces.map(trace => trace.name === target
+        ? {
+            ...trace,
+            mode: 'lines+markers+text',
+            text: trace.y.map(v => (v!=null ? v.toFixed(2) : '')),
+            textposition: 'top center'
+          }
+        : { ...trace, visible: 'legendonly' }
+      );
+    }
+    return traces;
+  }, [traces, selectedKey]);
+
+  const layout = useMemo(() => ({
     autosize: true,
-    margin: { l: 0, r: 0, t: 0, b: 20 },
+    margin: { l:0, r:0, t:40, b:20 },
     xaxis: { title: 'Month', automargin: true },
     yaxis: { title: 'Price [$]', automargin: true },
     hovermode: 'closest',
     title: 'Time Chart(Brand & Model)',
     showlegend: false,
-    legend: {
-      orientation: 'h',
-      x: 0.5,
-      xanchor: 'center',
-      y: -0.2,
-      yanchor: 'top',
-      traceorder: 'normal',
-      itemwidth: '100%',
-      font: { size: 10 },
-    },
-  };
+  }), []);
 
   return (
     <div className="timechart-wrapper">
       <Plot
-        data={traces}
+        data={displayTraces}
         layout={layout}
         useResizeHandler
         style={{ width: '100%', height: '100%' }}
       />
       <style jsx>{`
         .timechart-wrapper {
+          flex: 1;
           width: 100%;
           height: 100%;
           position: relative;
         }
-        /* Plotly 내부 legend 컨테이너 스크롤 허용 */
+        /* Legend 스크롤 유지 */
         .timechart-wrapper :global(.legend) {
           overflow-x: auto;
           overflow-y: auto;

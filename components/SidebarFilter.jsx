@@ -1,49 +1,43 @@
 // components/SidebarFilter.jsx
 import { useState, useRef, useEffect } from 'react';
 
-export default function SidebarFilter({ col, data = [], onChange }) {
+export default function SidebarFilter({
+  col,
+  data = [],
+  selectedValues = [],
+  onChange
+}) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
-  
-  // 사이드바 전용 고정 옵션 (메인 필터 우선 적용)
-  const fixedOptionsMap = {
-    Brand: ['Samsung', 'LG', 'TCL', 'Hisense', 'Sony', 'VIZIO', 'Roku'],
-    'Screen Size': ['32', '43', '50', '55', '65', '70', '75', '85', '100'],
-  };
-  const fixedOptions = fixedOptionsMap[col] || null;
 
-  // 데이터 기반 옵션
+  // 전체 드롭다운 목록: 데이터 기반 전체 옵션
   const options = Array.from(
     new Set(data.map(r => r[col] ?? '').filter(x => x))
   ).sort((a, b) =>
     a.toString().localeCompare(b.toString(), undefined, { numeric: true })
   );
 
-  // 검색어에 따른 필터링
-  const filtered = options.filter(v =>
-    v.toString().toLowerCase().includes(search.toLowerCase())
-  );
+  // 완전 컨트롤드: selectedValues prop을 단일 상태로 사용
+  const selected = selectedValues;
 
-  // 사이드바 선택 변경 시 메인 필터 고정 옵션 우선 로직
-  const applyChange = vals => {
-    const next = (fixedOptions && vals.length === 0)
-      ? fixedOptions
-      : vals;
-    setSelected(next);
+  // 전체 선택/해제
+  const isAll = options.length > 0 && selected.length === options.length;
+  const toggleAll = () => onChange(isAll ? [] : options);
+
+  // 개별 항목 토글
+  const toggleValue = v => {
+    const next = selected.includes(v)
+      ? selected.filter(x => x !== v)
+      : [...selected, v];
     onChange(next);
   };
 
-  // 선택 상태
-  const [selected, setSelected] = useState(
-    () => fixedOptions ? [...fixedOptions] : []
-  );
-  
-  // 외부 클릭 시 닫기
-  const wrapperRef = useRef();
+  // 외부 클릭 시 드롭다운 닫기
+  const ref = useRef();
   useEffect(() => {
     if (!open) return;
     const onClickOutside = e => {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
+      if (ref.current && !ref.current.contains(e.target)) {
         setOpen(false);
       }
     };
@@ -51,21 +45,13 @@ export default function SidebarFilter({ col, data = [], onChange }) {
     return () => document.removeEventListener('mousedown', onClickOutside);
   }, [open]);
 
-  const toggleValue = val => {
-    const vals = selected.includes(val)
-      ? selected.filter(x => x !== val)
-      : [...selected, val];
-    applyChange(vals);
-  };
-
-  const isAllChecked = options.length > 0 && selected.length === options.length;
-  const toggleAll = () => {
-    if (isAllChecked) applyChange([]);
-    else applyChange(options);
-  };
+  // 검색어로 필터링
+  const filtered = options.filter(v =>
+    v.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <div className="filter-wrapper" ref={wrapperRef}>
+    <div className="filter-wrapper" ref={ref}>
       <button
         className={`filter-button ${open || selected.length ? 'active' : ''}`}
         onClick={() => setOpen(o => !o)}
@@ -82,18 +68,18 @@ export default function SidebarFilter({ col, data = [], onChange }) {
             value={search}
             onChange={e => setSearch(e.target.value)}
           />
+
           <label className="filter-all">
-            <input
-              type="checkbox"
-              checked={isAllChecked}
-              onChange={toggleAll}
-            />
-            All
+            <input type="checkbox" checked={isAll} onChange={toggleAll} /> All
           </label>
+
           <div className="filter-list">
             {filtered.length ? (
               filtered.map(v => (
-                <label key={v} className={selected.includes(v) ? 'selected' : ''}>
+                <label
+                  key={v}
+                  className={selected.includes(v) ? 'selected' : ''}
+                >
                   <input
                     type="checkbox"
                     checked={selected.includes(v)}

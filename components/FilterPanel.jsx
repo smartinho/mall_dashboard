@@ -2,20 +2,16 @@
 import React, { useState } from 'react';
 import SidebarFilter from './SidebarFilter';
 
-export default function FilterPanel({ data = [], onFilter }) {
+export default function FilterPanel({
+  data = [],
+  onFilter,
+  filterSelections = {}
+}) {
   const cols = [
-    'Shopping Mall',
-    'Brand',
-    'Model Name',
-    'Screen Size',
-    'Display Type',
-    'Resolution',
-    'Refresh Rate',
-    'Brightness',
-    'Platform',
-    'Price[$]'
+    'Shopping Mall', 'Brand', 'Model Name', 'Screen Size',
+    'Display Type', 'Resolution', 'Refresh Rate', 'Brightness',
+    'Platform', 'Price[$]'
   ];
-
   const [clearCount, setClearCount] = useState(0);
   const handleClearAll = () => {
     cols.forEach(col => onFilter(col, []));
@@ -30,10 +26,10 @@ export default function FilterPanel({ data = [], onFilter }) {
             col={col}
             data={data}
             onChange={vals => onFilter(col, vals)}
+            selectedValues={Array.from(filterSelections[col] || [])}
           />
         </div>
       ))}
-      
       <button className="filter clear-btn" onClick={handleClearAll}>
         All Clear
       </button>

@@ -1,6 +1,13 @@
+// components/Sidebar.jsx
 import FilterPanel from './FilterPanel';
 
-export default function Sidebar({ data = [], onFilter, isOpen, onClose }) {
+export default function Sidebar({
+  data = [],
+  onFilter,
+  filterSelections = {},
+  isOpen,
+  onClose
+}) {
   if (!isOpen) return null;
 
   return (
@@ -14,31 +21,30 @@ export default function Sidebar({ data = [], onFilter, isOpen, onClose }) {
           ◀
         </button>
         <div className="filter-container">
-          <FilterPanel data={data} onFilter={onFilter} />
+          <FilterPanel
+            data={data}
+            onFilter={onFilter}
+            filterSelections={filterSelections}
+          />
         </div>
       </div>
 
       <style jsx>{`
-        .sidebar-wrapper {
-          display: inline-block;
-        }
-
+        .sidebar-wrapper { display: inline-block; }
         .sidebar {
           background: #f5f5f5;
           border: 1px solid #ddd;
-          padding: 2.5rem 1rem 1rem 1rem; /* 상단 패딩 추가로 닫기 버튼 공간 확보 */
+          padding: 2.5rem 1rem 1rem 1rem;
           border-radius: 8px;
-          box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+          box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
           position: relative;
           z-index: 100;
           min-width: 180px;
         }
-
         .close-button {
           position: absolute;
           top: 8px;
           right: 8px;
-          // background: #0c011b;
           color: black;
           border: none;
           font-size: 1rem;
@@ -47,10 +53,7 @@ export default function Sidebar({ data = [], onFilter, isOpen, onClose }) {
           cursor: pointer;
           z-index: 101;
         }
-
-        .filter-container {
-          margin-top: 0.5rem;
-        }
+        .filter-container { margin-top: 0.5rem; }
       `}</style>
     </div>
   );

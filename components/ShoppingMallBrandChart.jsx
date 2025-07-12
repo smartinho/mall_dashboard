@@ -6,7 +6,7 @@ const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 
 // HSL 기반 고유 색상 생성
 const getColor = (index, total) => {
-  const hue = Math.round((index / total) * 1500) % 360;
+  const hue = Math.round((index / total) * 2000) % 360;
   return `hsl(${hue}, 65%, 50%)`;
 };
 
@@ -36,53 +36,71 @@ export default function ShoppingMallBrandChart({
   }, [data]);
   const sortedBrands = useMemo(
     () =>
-      brands.sort(
+      [...brands].sort(
         (a, b) => (totalByBrand[b] || 0) - (totalByBrand[a] || 0)
       ),
     [brands, totalByBrand]
   );
 
-  // 3) Plotly trace 생성 (브랜드별 하나씩)
+  // 3) 쇼핑몰별 총합 계산 (각 막대 위에 표시할 라벨)
+  const totals = useMemo(
+    () =>
+      malls.map(
+        m => data.filter(d => d['Shopping Mall'] === m).length
+      ),
+    [malls, data]
+  );
+
+  // 4) Plotly trace 생성 (브랜드별 하나씩, 세로 방향)
   const traces = useMemo(
     () =>
       sortedBrands.map((brand, idx) => ({
         type: 'bar',
         name: brand,
-        x: malls.map(m =>
+        x: malls,
+        y: malls.map(m =>
           data.filter(
             d => d['Shopping Mall'] === m && d['Brand'] === brand
           ).length
         ),
-        y: malls,
-        orientation: 'h',
         marker: { color: getColor(idx, sortedBrands.length) },
         hovertemplate:
-          `<b>%{y}</b><br>` +
+          `<b>%{x}</b><br>` +
           `Brand: ${brand}<br>` +
-          `Count: %{x}` +
+          `Count: %{y}` +
           `<extra></extra>`,
       })),
     [sortedBrands, malls, data]
   );
 
-  // 4) 레이아웃 설정
+  // 5) 레이아웃 설정 (수직 누적 + 라벨)
   const layout = useMemo(
     () => ({
       barmode: 'stack',
-      margin: { l: 0, r: 0, t: 0, b: 20 },
-      xaxis: { 
+      margin: { l: 20, r: 20, t: 0, b: 10 },
+      xaxis: {
         title: '',
-        showgrid: true, 
-        zeroline: true,  
+        tickangle: 0,
+        automargin: true,
       },
-      yaxis: { 
+      yaxis: {
         title: '',
-        automargin: true, 
+        showgrid: true,
+        zeroline: true,
       },
       showlegend: false,
       hovermode: 'closest',
+      annotations: malls.map((m, i) => ({
+        x: m,
+        y: totals[i],
+        text: totals[i].toString(),
+        xanchor: 'center',
+        yanchor: 'bottom',
+        showarrow: false,
+        font: { size: 12 },
+      })),
     }),
-    []
+    [malls, totals]
   );
 
   return (
@@ -90,8 +108,7 @@ export default function ShoppingMallBrandChart({
       data={traces}
       layout={layout}
       useResizeHandler
-      style={{ width, height}}
-      // config={{ displayModeBar: false }}
+      style={{ width, height }}
     />
   );
 }
