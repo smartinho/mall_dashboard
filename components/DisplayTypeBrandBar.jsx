@@ -33,7 +33,7 @@ export default function DisplayTypePriceBar({ data, width = '100%', height = '10
   }, [brands, displayTypes, data]);
 
   const layout = useMemo(() => ({
-    // title: 'Display Type vs Brand (Count)',
+    autosize: true,
     barmode: 'group',
     margin: { l: 0, r: 0, t: 0, b: 10 },
     xaxis: {
@@ -55,7 +55,10 @@ export default function DisplayTypePriceBar({ data, width = '100%', height = '10
       layout={layout}
       style={{ width, height }}
       useResizeHandler={true}
-      // config={{ displayModeBar: false }}
+      config={{ 
+          displayModeBar: false,
+          responsive: true
+        }}
     />
   );
 }

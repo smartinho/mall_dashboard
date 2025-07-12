@@ -73,7 +73,7 @@ export default function ResolutionPriceBubble({
     [summary, totalCount]
   );
 
-  const layout = {
+  const layout = useMemo(() => ({
     autosize: true,
     margin: { l: 0, r: 0, t: 0, b: 20 },
     xaxis: { title: 'Price [$]', automargin: true },
@@ -86,7 +86,7 @@ export default function ResolutionPriceBubble({
     },
     showlegend: false,
     hovermode: 'closest',
-  };
+  }), []);
 
   return (
     <Plot
@@ -94,6 +94,10 @@ export default function ResolutionPriceBubble({
       layout={layout}
       useResizeHandler
       style={{ width, height }}
+      config={{ 
+          displayModeBar: false,
+          responsive: true
+        }}
     />
   );
 }

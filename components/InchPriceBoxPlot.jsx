@@ -60,14 +60,15 @@ export default function InchPriceBoxPlot({
   );
 
   // 5) Responsive layout with margins
-  const layout = {
+  const layout = useMemo(() => ({
     autosize: true,
     margin: { l: 0, r: 0, t: 0, b: 20 },
     xaxis: { title: 'Price [$]', automargin: true },
     yaxis: { title: 'Screen Size (Inch)', automargin: true },
     showlegend: false,
+    autosize: true,
     hovermode: 'closest',
-  };
+  }), []);
 
   return (
       <Plot
@@ -75,7 +76,10 @@ export default function InchPriceBoxPlot({
         layout={layout}
         useResizeHandler
         style={{ width, height}}
-        // config={{ displayModeBar: false }}
+        config={{ 
+          displayModeBar: false,
+          responsive: true
+        }}
       />
   );
 }

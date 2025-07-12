@@ -4,7 +4,12 @@ import Papa from 'papaparse';
 
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 
-export default function Timechart({ data = [], selectedKey = null }) {
+export default function Timechart({ 
+  data = [], 
+  selectedKey = null,
+  width = '100%',
+  height = '100%',
+}) {
   const [csvData, setCsvData] = useState([]);
 
   // ▶ CSV는 마운트 시 한 번만 로드합니다.
@@ -97,7 +102,11 @@ export default function Timechart({ data = [], selectedKey = null }) {
         data={displayTraces}
         layout={layout}
         useResizeHandler
-        style={{ width: '100%', height: '100%' }}
+        style={{ width, height}}
+        config={{ 
+          displayModeBar: false,
+          responsive: true
+        }}
       />
       <style jsx>{`
         .timechart-wrapper {

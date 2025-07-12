@@ -12,7 +12,6 @@ const getColor = (index, total) => {
 
 export default function ShoppingMallBrandChart({
   data,
-  // ChartCard의 cloneElement에서 넘겨줄 width/height props 받기
   width = '100%',
   height = '100%',
 }) {
@@ -74,33 +73,33 @@ export default function ShoppingMallBrandChart({
   );
 
   // 5) 레이아웃 설정 (수직 누적 + 라벨)
-  const layout = useMemo(
-    () => ({
-      barmode: 'stack',
-      margin: { l: 20, r: 20, t: 0, b: 10 },
-      xaxis: {
-        title: '',
-        tickangle: 0,
-        automargin: true,
-      },
-      yaxis: {
-        title: '',
-        showgrid: true,
-        zeroline: true,
-      },
-      showlegend: false,
-      hovermode: 'closest',
-      annotations: malls.map((m, i) => ({
-        x: m,
-        y: totals[i],
-        text: totals[i].toString(),
-        xanchor: 'center',
-        yanchor: 'bottom',
-        showarrow: false,
-        font: { size: 12 },
-      })),
-    }),
-    [malls, totals]
+  const layout = useMemo(() => ({
+    autosize: true,
+    barmode: 'stack',
+    margin: { l: 20, r: 20, t: 0, b: 10 },
+    xaxis: {
+      title: '',
+      tickangle: 0,
+      automargin: true,
+    },
+    yaxis: {
+      title: '',
+      showgrid: true,
+      zeroline: true,
+    },
+    showlegend: false,
+    hovermode: 'closest',
+    annotations: malls.map((m, i) => ({
+      x: m,
+      y: totals[i],
+      text: totals[i].toString(),
+      xanchor: 'center',
+      yanchor: 'bottom',
+      showarrow: false,
+      font: { size: 12 },
+    })),
+  }),
+  [malls, totals]
   );
 
   return (
@@ -109,6 +108,10 @@ export default function ShoppingMallBrandChart({
       layout={layout}
       useResizeHandler
       style={{ width, height }}
+      config={{ 
+          displayModeBar: false,
+          responsive: true
+        }}
     />
   );
 }

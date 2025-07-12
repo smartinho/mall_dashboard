@@ -142,11 +142,11 @@ export default function BrandDisplayTypePie({
     });
   }
 
-  const layout = {
+  const layout = useMemo(() => ({
     autosize: true,
     margin: { l: 0, r: 20, t: 0, b: isGrid ? 20 : 80 },
     annotations,
-  };
+  }), []);
 
   return (
     <Plot
@@ -154,7 +154,10 @@ export default function BrandDisplayTypePie({
       layout={layout}
       useResizeHandler
       style={{ width, height }}
-      // config={{ displayModeBar: false }}
+      config={{ 
+          displayModeBar: false,
+          responsive: true
+      }}
     />
   );
 }

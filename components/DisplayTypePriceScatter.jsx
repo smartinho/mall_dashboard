@@ -47,7 +47,7 @@ export default function DisplayTypePriceScatter({ data, width = '100%', height =
   }, [brands]);
 
   // 5) Layout
-  const layout = {
+  const layout = useMemo(() => ({
     autosize: true,
     margin: { l: 0, r: 0, t: 0, b: 20 },
     xaxis: {
@@ -70,7 +70,7 @@ export default function DisplayTypePriceScatter({ data, width = '100%', height =
       borderwidth: 1,
     },
     hovermode: 'closest',
-  };
+  }), []);
 
   return (
     <Plot
@@ -78,7 +78,10 @@ export default function DisplayTypePriceScatter({ data, width = '100%', height =
       layout={layout}
       useResizeHandler
       style={{ width, height}}
-      // config={{ displayModeBar: false }}
+      config={{ 
+          displayModeBar: false,
+          responsive: true
+        }}
     />
   );
 }

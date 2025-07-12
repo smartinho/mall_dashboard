@@ -260,7 +260,8 @@ export default function Home() {
         }
         .content { 
         display: flex; 
-        overflow-x: hidden; 
+        overflow-x: hidden;
+        height: 100%;
         }
         .dashboard { 
         flex: 1; 
@@ -270,14 +271,18 @@ export default function Home() {
         }
         .charts-wrapper {
           overflow-x: auto;
+          overflow-y: auto;
+          height: 100%;
         }
         .charts {
           display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
+          grid-auto-rows: 1fr;
           gap: 20px;
           padding: 20px;
           box-sizing: border-box;
           align-items: stretch;
+          height: 100%;
         }
         @media (max-width: 800px) {
           .charts {
@@ -288,6 +293,8 @@ export default function Home() {
           display: flex;
           flex-direction: column;
           width: 100%;
+          flex: 1;
+          min-height: 0;
         }
         .chart-area {
           flex: 2;           /* 그래프 영역 비중 (원하는 비율로 조절 가능) */

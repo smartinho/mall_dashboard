@@ -1,3 +1,4 @@
+// components/ChartCard.jsx
 import { useState, cloneElement } from 'react';
 import { ZoomIn } from 'lucide-react';
 
@@ -17,7 +18,7 @@ export default function ChartCard({
     });
 
   return (
-    <div className="chart-card">
+    <div className={`chart-card${fullHeight ? ' full-height' : ''}`}>
       <div className="chart-header">
         <h4
           className={`chart-title${onTitleClick ? ' clickable' : ''}`}
@@ -64,6 +65,7 @@ export default function ChartCard({
 
       <style jsx>{`
         .chart-card {
+          box-sizing: border-box;
           background: #fff;
           padding: 10px;
           border-radius: 8px;
@@ -71,6 +73,12 @@ export default function ChartCard({
           display: flex;
           flex-direction: column;
           gap: 10px;
+          width: 100%;
+        }
+        .chart-card.full-height {
+          // display: flex;
+          // flex: 1;
+          height: 100%
         }
         .chart-header {
           display: flex;
@@ -99,6 +107,17 @@ export default function ChartCard({
           border: none;
           cursor: pointer;
         }
+
+        /* fullHeight 모드일 때: 자식 컨테이너를 flex로 채워넣기 */
+        .full-container {
+          display: flex;
+          flex: 1;
+          min-height: 0;
+        }
+        .full-container > * {
+          flex: 1;
+          min-height: 0;
+        }
         .aspect-ratio-box {
           position: relative;
           width: 100%;
@@ -109,8 +128,11 @@ export default function ChartCard({
         .chart-container {
           position: absolute;
           top: 0; left: 0;
-          width: 100%; height: 100%;
+          width: 100%;
+          height: 100%;
         }
+
+        /* 모달 스타일 (Zoom) */
         .modal-overlay {
           position: fixed;
           top: 0; left: 0;
@@ -141,16 +163,10 @@ export default function ChartCard({
           cursor: pointer;
         }
         .modal-chart {
-          flex: 1; width: 100%; height: 100%; overflow: auto;
-        }
-        /* fullHeight 모드일 때 */
-        .full-container {
           flex: 1;
-          display: flex;
-          overflow: hidden;
-        }
-        .full-container > * {
-          flex: 1;
+          width: 100%;
+          height: 100%;
+          overflow: auto;
         }
       `}</style>
     </div>
