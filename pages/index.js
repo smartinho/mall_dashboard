@@ -277,6 +277,7 @@ export default function Home() {
           gap: 20px;
           padding: 20px;
           box-sizing: border-box;
+          align-items: stretch;
         }
         @media (max-width: 800px) {
           .charts {

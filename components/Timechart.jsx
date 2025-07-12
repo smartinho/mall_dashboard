@@ -21,6 +21,7 @@ export default function Timechart({ data = [], selectedKey = null }) {
       setCsvData(results);
     }
     loadCsvFiles();
+    window.dispatchEvent(new Event('resize'));
   }, []);
 
   // ▶ Brand__Model 에 매핑된 가격 시리즈 생성
